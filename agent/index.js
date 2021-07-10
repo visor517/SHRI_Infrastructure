@@ -1,5 +1,5 @@
 const express = require('express')
-const {port} = require('./server-conf.json')
+const {port} = require('./agent-conf.json')
 
 const app = express()
 
