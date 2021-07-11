@@ -1,25 +1,16 @@
+let agents = []
+module.exports = agents
+
 const express = require('express')
 const {port} = require('./server-conf.json')
-const todoLog = require('./todoLog')
+const regAgent = require('./actions/regAgent')
 
 const app = express()
 
-const date = new Date()
-const logFile = `${__dirname}/logs/${date.getHours()}${date.getMinutes()}${date.getSeconds()}.txt`
-let agents = []
+app.get('/notify-agent', regAgent)
 
-app.get('/notify-agent', (req,res) => {
-    const params = req.query
-    if (params && params.port && params.agentHost) {
-        agents.push(params)
-        todoLog(logFile, `Добавлен агент: ${params.agentHost}:${params.port}`)
-        res.json({ error: 0})
-    }
-    else {
-        todoLog(logFile, `Неудачная попытка добавить агент: ${params.agentHost}:${params.port}`)
-        res.json({ error: 1})
-    }
-    
+app.get('/agents-list', (req,res) => {
+    res.json(agents)
 })
 
 app.get('/notify-build-result', (req,res) => {
