@@ -1,10 +1,13 @@
 const todoLog = require("./todoLog")
 const agents = require('../index')
+const tasks = require('../index')
 
 module.exports = (req,res) => {
     const params = req.query
     if (params && params.port && params.agentHost) {
         agents.push(params)
+        tasks.push(params)
+        
         todoLog(`Добавлен агент: ${params.agentHost}:${params.port}`)
         res.json({ error: 0})
     }
