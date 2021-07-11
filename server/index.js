@@ -1,9 +1,9 @@
 let agents = []     // список зарегистрированных агентов
 let tasks = []      // список задач
 let results = []    // список полученных результатов
-module.exports = agents
-module.exports = tasks
-module.exports = results
+module.exports.agents = agents
+module.exports.tasks = tasks
+module.exports.results = results
 
 const express = require('express')
 const {port} = require('./server-conf.json')

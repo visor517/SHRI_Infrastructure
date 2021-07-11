@@ -1,5 +1,5 @@
 const todoLog = require("./todoLog")
-const results = require('../index')
+const {results} = require('../index')
 
 module.exports = (req,res) => {
     const params = req.query
