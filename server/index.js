@@ -1,30 +1,33 @@
-let agents = []     // список зарегистрированных агентов
-let tasks = []      // список задач
-let results = []    // список полученных результатов
+let agents = []     // очередь агентов
+let tasks = []      // очередь задач
+let works = []      // список проводимых работ [{agent:{},task:{}}]
+let results = []    // очередь не отправленных результатов
 const date = new Date()
 const logFile = `/logs/${date.getHours()}${date.getMinutes()}${date.getSeconds()}.txt`  // файл для лога
 module.exports.agents = agents
 module.exports.tasks = tasks
-module.exports.results = results
+module.exports.works = works
 module.exports.logFile = logFile
 
 const express = require('express')
 const {port} = require('./server-conf.json')
-const regAgent = require('./actions/regAgent')
-const getResult = require('./actions/getResult')
+const routeAgent = require('./actions/routeAgent')
+const routeResult = require('./actions/routeResult')
 const fs = require('fs')
 
 const app = express()
 
-app.get('/notify-agent', regAgent)
-app.get('/notify-build-result', getResult)
+app.get('/notify-agent', routeAgent)
+app.get('/notify-build-result', routeResult)
 
 // для себя
-app.get('/agents-list', (req,res) => res.json(agents))  // проверять список агентов
-app.get('/tasks-list', (req,res) => res.json(tasks))    // проверять список задач
-app.get('/log', async (req,res) => {                    // выводить текущий лог
+app.get('/agents-list', (req,res) => res.json(agents))  // проверять очередь агентов
+app.get('/tasks-list', (req,res) => res.json(tasks))    // проверять очередь задач
+app.get('/works-list', (req,res) => res.json(works))    // проверять список выданных задач
+app.get('/', async (req,res) => {                       // выводить текущий лог
     await fs.readFile(`.${logFile}`, (err, log) => {
-        res.send(`<h2>Лог ${logFile}</h2><plaintext>${log}`)
+        res.send(`<a href="/agents-list">Агенты</a>|<a href="/tasks-list">Задачи</a>|<a href="/works-list">Работы</a>
+                <h2>Лог ${logFile}</h2><plaintext>${log}`)
     })    
 })
 
