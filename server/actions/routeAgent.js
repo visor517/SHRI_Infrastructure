@@ -17,7 +17,8 @@ module.exports = (req,res) => {
         if (isNew) {
             agents.push(agent)
             todoLog(`Добавлен агент: ${agent.agentHost}:${agent.port}`)
-            giveTask()
+
+            giveTask()  // запускаем выдачу задач тк агент пришел
         }
         else todoLog(`Попытка добавить агент повторно: ${agent.agentHost}:${agent.port}`)
         

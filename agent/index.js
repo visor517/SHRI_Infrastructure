@@ -1,11 +1,11 @@
 const express = require('express')
 const {port} = require('./agent-conf.json')
-const axios = require('axios')
+const routeWork = require('./actions/routeWork')
 
 const app = express()
 
 app.get('/build', (req,res) => {
-
+    routeWork(req.query)
     res.json({ error: 0})
 })
 

@@ -1,18 +1,25 @@
 const todoLog = require("./todoLog")
-//const {results} = require('../index')
+const {agents, results, works} = require('../index')
+const giveTask = require('./giveTask')
 
 module.exports = (req,res) => {
-    const params = req.query
-    if (params && params.id && params.status && params.log) {
-        results.push(params)
-        todoLog(`Получен результат сборки ${params.id}: ${params.status}`)
+    const task = req.query
+    if (task && task.buildId && task.success && task.buildLog) {
+        results.push(task)
+        todoLog(`Получен результат сборки: ${task.buildId} success:${task.success}`)
         res.json({ error: 0})
+        
+        for (let i=0; i<works.length; i++) {            // ищем а отправляли ли такую задачу
+            if (works[i].task.id == task.buildId) {
+                // нужно убрать задачу из works
+                agents.push(works[i].agent)             // возвращаем агента в очередь
+                giveTask()                              // запускаем выдачу задач тк агент вернулся
+                break
+            }
+        }
     }
     else {
-        todoLog(`Неудачная попытка получения результатов сборки ${params.id}, статус ${params.status}, лог ${params.log}`)
+        todoLog(`Неудачная попытка получения результатов сборки ${task.buildId}, статус ${task.success}, лог ${task.buildLog}`)
         res.json({ error: 1})
-    }  
+    }
 }
-
-// нет проверки на правильность заполнения и повторки
-// и запускалась ли вообще эта сборка
