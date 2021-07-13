@@ -4,9 +4,20 @@ const {agents} = require('../index')
 module.exports = (req,res) => {
     const params = req.query
     if (params && params.port && params.agentHost) {
-        agents.push(params)
+
+        let isNew = true
+        for (let i=0; i < agents.length; i++) {
+            if ((agents[i].port == params.port) && (agents[i].agentHost == params.agentHost)) {
+                isNew = false
+                break
+            }
+        }
+        if (isNew) {
+            agents.push(params)
+            todoLog(`Добавлен агент: ${params.agentHost}:${params.port}`)
+        }
+        else todoLog(`Попытка добавить агент повторно: ${params.agentHost}:${params.port}`)
         
-        todoLog(`Добавлен агент: ${params.agentHost}:${params.port}`)
         res.json({ error: 0})
     }
     else {
@@ -14,5 +25,3 @@ module.exports = (req,res) => {
         res.json({ error: 1})
     }  
 }
-
-// пока нет защиты от повторок
